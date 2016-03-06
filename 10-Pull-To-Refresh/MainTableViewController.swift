@@ -15,7 +15,7 @@ class MainTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.clearsSelectionOnViewWillAppear = false
+        clearsSelectionOnViewWillAppear = false
         
         addRefreshControl()
     }
@@ -25,26 +25,26 @@ class MainTableViewController: UITableViewController {
     }
     
     func addRefreshControl() {
-        if self.refreshControl == nil {
-            self.refreshControl = UIRefreshControl()
+        
+        refreshControl = UIRefreshControl()
+        
+        guard let pullToRefresh = refreshControl else {
+            return
         }
-        self.refreshControl!.addTarget(self, action: #selector(MainTableViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
-        self.tableView.addSubview(self.refreshControl!)
+        
+        pullToRefresh.addTarget(self, action: #selector(MainTableViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
+        tableView.addSubview(pullToRefresh)
     }
     
     func refresh() {
         loadData()
         
-        self.tableView.reloadData()
-        self.refreshControl!.endRefreshing()
+        tableView.reloadData()
+        refreshControl?.endRefreshing()
     }
     
     func loadData() {
-        self.dataSource.append("Fish")
-        self.dataSource.append("Carrots")
-        self.dataSource.append("Bread")
-        self.dataSource.append("Chicken")
-        self.dataSource.append("Watter")
+        dataSource += ["Fish", "Carrots", "Bread", "Chicken", "Watter"]
     }
 
     // MARK: - Table view data source
@@ -61,6 +61,7 @@ class MainTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
 
         cell.textLabel?.text = dataSource[indexPath.row]
+        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
 
         return cell
     }
